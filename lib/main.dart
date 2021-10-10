@@ -21,18 +21,39 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget{
+
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({ Key? key }) : super(key: key);
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String text="";
+  void changeText(String text){
+    this.setState(() {
+    this.text=text;
+    });
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
     appBar: AppBar(title: Text("To Do List")),
-    body: TextInputWidget());  // Scaffold sets up a regular page. Also hold other widgets
+    body: Column(children: <Widget>[
+      TextInputWidget(
+      this.changeText),
+      Text(this.text)
+      ]));  // Scaffold sets up a regular page. Also hold other widgets
   }
 }
 //stful+Enter to generate statefulWidget Code
 //Responsible of taking constructor
 class TextInputWidget extends StatefulWidget {
-  const TextInputWidget({ Key? key }) : super(key: key);
+  final Function(String) callback;
+  TextInputWidget(this.callback);
 
   @override
   _TextInputWidgetState createState() => _TextInputWidgetState();
@@ -41,33 +62,34 @@ class TextInputWidget extends StatefulWidget {
   @override
 class _TextInputWidgetState extends State<TextInputWidget> {
   final controller= TextEditingController();
-  String text=""; //allow attaching to text field to manipulate data
+  //allow attaching to text field to manipulate data
   //force flutter to refresh. 1. Add dispose method
   void dispose(){
     super.dispose(); 
     controller.dispose();//When this widget is done, clean it up and get rid of stuff so its not loose in memory, cleaning up the object
   }
-  void changeText(text){
-    if (text=="Hello World"){
-      controller.clear();
-      text="";
-      //clears textfield if inputted "Hello World"
-    }
-    //force flutter to refresh and change by using setstate
-    setState(() {
-     this.text=text; 
-    });
+  void click(){
+    //widget. reference the class TextInputWidget
+    widget.callback(controller.text);
+    controller.clear(); 
   }
+ 
   @override
   Widget build(BuildContext context) {
-      return Column(
-        children:<Widget>[TextField(
+      return TextField(
         controller: this.controller,
         decoration:InputDecoration(
-          prefixIcon: Icon(Icons.list),labelText:"Add A To Do List Task:"),
-          onChanged:(text) => changeText(text) , //making arrow function. Text is passed to another function
-      ), Text(this.text)
-      ]);
+          prefixIcon: Icon(Icons.list),
+          labelText:"Add A To Do List Task:",
+          suffixIcon:IconButton(
+          icon: Icon(Icons.save),
+          splashColor: Colors.blue,
+          tooltip: "Save To Do List",
+          onPressed: this.click, //tell us what to do when button pressed
+          )));
+           //making arrow function. Text is passed to another function
+      
+      
   }
 }
 

@@ -4,13 +4,16 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- Added Splash Color
+- Button
+- Icons.icon widgets
+- Suffix Icon
+- Text Field in Home Page, modifies a homepage
 
-A few resources to get you started if this is your first Flutter project:
+## UPDATE
+- It clears the textbox whenever button is submitted, it is then shown at the bottom print.
+# IMPORTANT
+### - If it changes then it is a stateful else a stateless widget
+### - Callback pass a function to this TextInputWidget when it is pressed, it will call the function that it passed
+### - {} in function makes it optional eg TextInputWidget({this.callback});
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
