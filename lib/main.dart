@@ -4,6 +4,23 @@ void main() {
   runApp(const MyApp());
 }
 
+class ToDoList{
+  String body;
+  String title;
+  bool finished= false;
+  ToDoList(this.title, this.body);
+
+  void changeFinish(){
+    this.finished=!this.finished;
+    if(this.finished){
+      this.finished=true;
+    }else{
+      this.finished=false;
+    }
+  }
+
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -32,9 +49,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String text="";
-  void changeText(String text){
+  List<ToDoList> todolist=[];
+  void newToDoList(String text){
     this.setState(() {
-    this.text=text;
+    todolist.add(new ToDoList(text,"Distributive Computing"));
+    
     });
     
   }
@@ -43,9 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
     appBar: AppBar(title: Text("To Do List")),
     body: Column(children: <Widget>[
-      TextInputWidget(
-      this.changeText),
-      Text(this.text)
+    Expanded(child: ToDoList_list(this.todolist)),
+    TextInputWidget(this.newToDoList)
       ]));  // Scaffold sets up a regular page. Also hold other widgets
   }
 }
@@ -72,6 +90,7 @@ class _TextInputWidgetState extends State<TextInputWidget> {
     //widget. reference the class TextInputWidget
     widget.callback(controller.text);
     controller.clear(); 
+    FocusScope.of(context).unfocus();
   }
  
   @override
@@ -90,6 +109,53 @@ class _TextInputWidgetState extends State<TextInputWidget> {
            //making arrow function. Text is passed to another function
       
       
+  }
+}
+
+class ToDoList_list extends StatefulWidget {
+
+final List<ToDoList> listItems;
+ToDoList_list(this.listItems);
+
+@override  
+  _ToDoList_listState createState() => _ToDoList_listState();
+}
+
+class _ToDoList_listState extends State<ToDoList_list> {
+  void finish(Function callback){
+    this.setState(() {
+      callback();
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount:this.widget.listItems.length,
+      itemBuilder: (context,index){
+        var todolists=this.widget.listItems[index]; //Tells builder how many items its gonna store
+        return Card(
+          child:Row(children: <Widget>[
+          Expanded(
+          child: ListTile(
+          title:Text(todolists.title),
+          subtitle:Text(todolists.body)
+        )),
+        Row(
+        children: <Widget>[
+        Container(
+        child: Text("Completed",
+        style:TextStyle(fontSize:13)),
+        padding:EdgeInsets.fromLTRB(0, 0, 5, 0)
+        ),
+          IconButton(icon: 
+        Icon(Icons.radio_button_unchecked),
+        onPressed:() => this.finish(todolists.changeFinish),
+        color: todolists.finished ? Colors.blue : Colors.black)
+        ],
+        )]
+        ));
+      },
+    );
   }
 }
 
